@@ -17,4 +17,4 @@ Likely when you first clone this repo you will not have all the required configu
 
 1. Find the IP address of your Nanoleaf. I did this using my router app but there are many ways. See the [Nanoleaf Docs](https://forum.nanoleaf.me/docs#_oon416cadkkr) for other options.
 2. In the [Nanoleaf Docs](https://forum.nanoleaf.me/docs#_oon416cadkkr) they mention the default port is `16021` but also not to hardcode that. At this time I have hardcoded it but may later build a dynamic way to determine it.
-3. Getting the auth token can be done with the `getToken` function. It simply calls `/api/v1/new` just as the [docs](https://forum.nanoleaf.me/docs#_5soyiy1g6uf) suggest.
+3. Getting the auth token can be done with the `getAuthToken` function. It simply calls `/api/v1/new` just as the [docs](https://forum.nanoleaf.me/docs#_5soyiy1g6uf) suggest.

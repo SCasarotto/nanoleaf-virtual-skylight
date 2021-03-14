@@ -9,4 +9,5 @@ const dotenvConfig = config() as MyDotenvConfig
 
 export const settings = {
 	...dotenvConfig,
+	API_DEBUGGING: true,
 }
