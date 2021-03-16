@@ -71,7 +71,7 @@ export interface AllPanelInfo {
 	// Improve type - Its not mentioned in the docs
 	firmwareUpgrade: Record<string, unknown>
 	panelLayout: {
-		globalOrientation: { value: number; max: number; min: number }
+		globalOrientation: { value: number; max: 360; min: 0 }
 		layout: {
 			numPanels: number
 			sideLength: number
@@ -87,13 +87,13 @@ export interface AllPanelInfo {
 	// Improve type - Its not mentioned in the docs
 	schedules: Record<string, unknown>
 	state: {
-		brightness: { value: number; max: number; min: number }
+		brightness: { value: number; max: 100; min: 0 }
 		// Feels like this will have more
-		colorMode: 'effect'
-		ct: { value: number; max: number; min: number }
-		hue: { value: number; max: number; min: number }
+		colorMode: 'effect' | 'ct'
+		ct: { value: number; max: 6500; min: 1200 }
+		hue: { value: number; max: 360; min: 0 }
 		on: { value: boolean }
-		sat: { value: number; max: number; min: number }
+		sat: { value: number; max: 100; min: 0 }
 	}
 }
 
@@ -113,7 +113,7 @@ export const getAllPanelInfo = async () => {
  */
 export const isOn = async () => {
 	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`)
-	const data: { value: boolean } = await response.json()
+	const data: AllPanelInfo['state']['on'] = await response.json()
 	return data.value
 }
 
@@ -128,6 +128,7 @@ export const turnOn = async () => {
 	})
 	return response
 }
+
 /**
  * Turns nanoleaf panel is off
  * @returns {Promise<Response>} request response
@@ -136,6 +137,38 @@ export const turnOff = async () => {
 	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`, {
 		method: 'PUT',
 		body: JSON.stringify({ on: { value: false } }),
+	})
+	return response
+}
+
+/**
+ * Get nanoleaf panel brightness
+ * @returns {Promise<number>} brightness value between 0-100
+ */
+export const getBrightness = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/brightness`)
+	const data: AllPanelInfo['state']['brightness'] = await response.json()
+	return data.value
+}
+
+interface SetBrightnessSpecifc {
+	value: number
+	duration?: number
+}
+interface SetBrightnessIncrement {
+	increment: number
+	duration?: number
+}
+export type SetBrightnessData = SetBrightnessSpecifc | SetBrightnessIncrement
+/**
+ * Set nanoleaf panel brightness
+ * @param {SetBrightnessData} - data
+ * @returns {Promise<Response>} request response
+ */
+export const setBrightness = async (data: SetBrightnessData) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+		method: 'PUT',
+		body: JSON.stringify({ brightness: data }),
 	})
 	return response
 }

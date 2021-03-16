@@ -1,6 +1,11 @@
 import { sleep } from 'https://deno.land/x/sleep/mod.ts'
 
-import { isOn, turnOn, turnOff, getAllPanelInfo } from './api.ts'
+import {
+	//isOn,
+	//turnOn,
+	//turnOff,
+	setBrightness,
+} from './api.ts'
 
 // while (true) {
 // 	const isNenoleafOn = await isOn()
@@ -11,4 +16,10 @@ import { isOn, turnOn, turnOff, getAllPanelInfo } from './api.ts'
 // 	}
 // 	await sleep(5)
 // }
-await getAllPanelInfo()
+
+while (true) {
+	await setBrightness({ value: 100, duration: 1 })
+	await sleep(1)
+	await setBrightness({ value: 0, duration: 1 })
+	await sleep(1)
+}
