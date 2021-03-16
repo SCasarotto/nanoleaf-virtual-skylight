@@ -172,3 +172,103 @@ export const setBrightness = async (data: SetBrightnessData) => {
 	})
 	return response
 }
+
+/**
+ * Get nanoleaf panel hue
+ * @returns {Promise<number>} hue value between 0-360
+ */
+export const getHue = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/hue`)
+	const data: AllPanelInfo['state']['hue'] = await response.json()
+	return data.value
+}
+
+interface SetHueSpecifc {
+	value: number
+}
+interface SetHueIncrement {
+	increment: number
+}
+export type SetHueData = SetHueSpecifc | SetHueIncrement
+/**
+ * Set nanoleaf panel hue
+ * @param {SetHueData} - data
+ * @returns {Promise<Response>} request response
+ */
+export const setHue = async (data: SetHueData) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+		method: 'PUT',
+		body: JSON.stringify({ hue: data }),
+	})
+	return response
+}
+
+/**
+ * Get nanoleaf panel saturation
+ * @returns {Promise<number>} saturation value between 0-100
+ */
+export const getSturation = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/sat`)
+	const data: AllPanelInfo['state']['sat'] = await response.json()
+	return data.value
+}
+
+interface SetSaturationSpecifc {
+	value: number
+}
+interface SetSaturationIncrement {
+	increment: number
+}
+export type SetSaturationData = SetSaturationSpecifc | SetSaturationIncrement
+/**
+ * Set nanoleaf panel saturation
+ * @param {SetSaturationData} - data
+ * @returns {Promise<Response>} request response
+ */
+export const setSaturation = async (data: SetSaturationData) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+		method: 'PUT',
+		body: JSON.stringify({ sat: data }),
+	})
+	return response
+}
+
+/**
+ * Get nanoleaf panel color temperature
+ * @returns {Promise<number>} color temperature value between 1200-6500
+ */
+export const getColorTemperature = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/ct`)
+	const data: AllPanelInfo['state']['ct'] = await response.json()
+	return data.value
+}
+
+interface SetColorTemperatureSpecifc {
+	value: number
+}
+interface SetColorTemperatureIncrement {
+	increment: number
+}
+export type SetColorTemperatureData = SetColorTemperatureSpecifc | SetColorTemperatureIncrement
+/**
+ * Set nanoleaf panel color temperature
+ * @param {SetColorTemperatureData} - data
+ * @returns {Promise<Response>} request response
+ */
+export const setColorTemperature = async (data: SetColorTemperatureData) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+		method: 'PUT',
+		body: JSON.stringify({ ct: data }),
+	})
+	return response
+}
+
+/**
+ * Get nanoleaf panel color mode
+ * @returns {Promise<number>} color mode
+ */
+export const getColorMode = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/colorMode`)
+	const data: AllPanelInfo['state']['colorMode'] = await response.json()
+	return data
+}
