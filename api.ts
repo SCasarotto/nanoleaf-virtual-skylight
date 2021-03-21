@@ -272,3 +272,97 @@ export const getColorMode = async () => {
 	const data: AllPanelInfo['state']['colorMode'] = await response.json()
 	return data
 }
+
+/**
+ * Get nanoleaf panel color mode
+ * @returns {Promise<number>} color mode
+ */
+export const getEffectSelect = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects/select`)
+	const data: AllPanelInfo['state']['colorMode'] = await response.json()
+	return data
+}
+
+/**
+ * Set nanoleaf panel currently selected effect
+ * @param {string} - effect
+ * @returns {Promise<Response>} effect
+ */
+export const setSelectedEffect = async (effect: string) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+		method: 'PUT',
+		body: JSON.stringify({ select: effect }),
+	})
+	return response
+}
+
+/**
+ * Set nanoleaf panel currently selected effect
+ * @param {string} - effect
+ * @returns {Promise<Response>} effect
+ */
+// Not exactly sure how to use this function
+export const writeEffect = async (command: string, effect: string) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+		method: 'PUT',
+		body: JSON.stringify({ write: { command, animName: effect } }),
+	})
+	return response
+}
+
+/**
+ * Get nanoleaf panel effect list
+ * @returns {Promise<string[]>} effect
+ */
+export const getEffectList = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects/effectsList`)
+	const data: string[] = await response.json()
+	return data
+}
+
+/**
+ * Get nanoleaf panel orientation
+ * @returns {Promise<number>} orientation
+ */
+export const getGlobalOrientation = async () => {
+	const response = await apiRequest(
+		`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout/globalOrientation`,
+	)
+	const data: AllPanelInfo['panelLayout']['globalOrientation'] = await response.json()
+	return data.value
+}
+
+/**
+ * Set nanoleaf panel orientation
+ * @param {number} - orientation between 0-360
+ * @returns {Promise<number>} orientation
+ */
+export const setGlobalOrientation = async (orientation: number) => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout`, {
+		method: 'PUT',
+		body: JSON.stringify({ globalOrientation: { value: orientation } }),
+	})
+	const data: AllPanelInfo['panelLayout']['globalOrientation'] = await response.json()
+	return data.value
+}
+
+/**
+ * Get nanoleaf panel layout
+ * @returns {Promise<AllPanelInfo['panelLayout']['layout']>} layout
+ */
+export const getLayout = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout/layout`)
+	const data: AllPanelInfo['panelLayout']['layout'] = await response.json()
+	return data
+}
+
+/**
+ * Identify nanoleaf panel
+ * @returns {Promise<Response>} layout
+ */
+export const identify = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/identify`, {
+		method: 'PUT',
+	})
+	return response
+}

@@ -4,7 +4,8 @@ import {
 	//isOn,
 	//turnOn,
 	//turnOff,
-	setBrightness,
+	// setBrightness,
+	identify,
 } from './api.ts'
 
 // while (true) {
@@ -17,9 +18,10 @@ import {
 // 	await sleep(5)
 // }
 
-while (true) {
-	await setBrightness({ value: 100, duration: 1 })
-	await sleep(1)
-	await setBrightness({ value: 0, duration: 1 })
-	await sleep(1)
-}
+// while (true) {
+// 	await setBrightness({ value: 100, duration: 1 })
+// 	await sleep(1)
+// 	await setBrightness({ value: 0, duration: 1 })
+// 	await sleep(1)
+// }
+await identify()
