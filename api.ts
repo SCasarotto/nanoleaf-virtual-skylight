@@ -29,7 +29,7 @@ export const apiRequest = async (input: Request | URL | string, init?: RequestIn
 }
 
 /**
- * Requests a new auth token from nanoleaf panel
+ * Requests a new auth token from Nanoleaf panel
  * @returns {Promise<string>} auth token
  */
 export const getAuthToken = async () => {
@@ -108,8 +108,8 @@ export const getAllPanelInfo = async () => {
 }
 
 /**
- * Checks nanoleaf panel is on
- * @returns {Promise<boolean>} state of nanoleaf panel on or off
+ * Checks Nanoleaf panel is on
+ * @returns {Promise<boolean>} state of Nanoleaf panel on or off
  */
 export const isOn = async () => {
 	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`)
@@ -118,7 +118,7 @@ export const isOn = async () => {
 }
 
 /**
- * Turns nanoleaf panel is on
+ * Turns Nanoleaf panel is on
  * @returns {Promise<Response>} request response
  */
 export const turnOn = async () => {
@@ -130,7 +130,7 @@ export const turnOn = async () => {
 }
 
 /**
- * Turns nanoleaf panel is off
+ * Turns Nanoleaf panel is off
  * @returns {Promise<Response>} request response
  */
 export const turnOff = async () => {
@@ -142,7 +142,7 @@ export const turnOff = async () => {
 }
 
 /**
- * Get nanoleaf panel brightness
+ * Get Nanoleaf panel brightness
  * @returns {Promise<number>} brightness value between 0-100
  */
 export const getBrightness = async () => {
@@ -161,7 +161,7 @@ interface SetBrightnessIncrement {
 }
 export type SetBrightnessData = SetBrightnessSpecifc | SetBrightnessIncrement
 /**
- * Set nanoleaf panel brightness
+ * Set Nanoleaf panel brightness
  * @param {SetBrightnessData} - data
  * @returns {Promise<Response>} request response
  */
@@ -174,7 +174,7 @@ export const setBrightness = async (data: SetBrightnessData) => {
 }
 
 /**
- * Get nanoleaf panel hue
+ * Get Nanoleaf panel hue
  * @returns {Promise<number>} hue value between 0-360
  */
 export const getHue = async () => {
@@ -191,7 +191,7 @@ interface SetHueIncrement {
 }
 export type SetHueData = SetHueSpecifc | SetHueIncrement
 /**
- * Set nanoleaf panel hue
+ * Set Nanoleaf panel hue
  * @param {SetHueData} - data
  * @returns {Promise<Response>} request response
  */
@@ -204,7 +204,7 @@ export const setHue = async (data: SetHueData) => {
 }
 
 /**
- * Get nanoleaf panel saturation
+ * Get Nanoleaf panel saturation
  * @returns {Promise<number>} saturation value between 0-100
  */
 export const getSturation = async () => {
@@ -221,7 +221,7 @@ interface SetSaturationIncrement {
 }
 export type SetSaturationData = SetSaturationSpecifc | SetSaturationIncrement
 /**
- * Set nanoleaf panel saturation
+ * Set Nanoleaf panel saturation
  * @param {SetSaturationData} - data
  * @returns {Promise<Response>} request response
  */
@@ -234,7 +234,7 @@ export const setSaturation = async (data: SetSaturationData) => {
 }
 
 /**
- * Get nanoleaf panel color temperature
+ * Get Nanoleaf panel color temperature
  * @returns {Promise<number>} color temperature value between 1200-6500
  */
 export const getColorTemperature = async () => {
@@ -251,7 +251,7 @@ interface SetColorTemperatureIncrement {
 }
 export type SetColorTemperatureData = SetColorTemperatureSpecifc | SetColorTemperatureIncrement
 /**
- * Set nanoleaf panel color temperature
+ * Set Nanoleaf panel color temperature
  * @param {SetColorTemperatureData} - data
  * @returns {Promise<Response>} request response
  */
@@ -264,7 +264,7 @@ export const setColorTemperature = async (data: SetColorTemperatureData) => {
 }
 
 /**
- * Get nanoleaf panel color mode
+ * Get Nanoleaf panel color mode
  * @returns {Promise<number>} color mode
  */
 export const getColorMode = async () => {
@@ -274,7 +274,7 @@ export const getColorMode = async () => {
 }
 
 /**
- * Get nanoleaf panel color mode
+ * Get Nanoleaf panel color mode
  * @returns {Promise<number>} color mode
  */
 export const getEffectSelect = async () => {
@@ -284,9 +284,9 @@ export const getEffectSelect = async () => {
 }
 
 /**
- * Set nanoleaf panel currently selected effect
+ * Set Nanoleaf panel currently selected effect
  * @param {string} - effect
- * @returns {Promise<Response>} effect
+ * @returns {Promise<Response>} request response
  */
 export const setSelectedEffect = async (effect: string) => {
 	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
@@ -297,9 +297,9 @@ export const setSelectedEffect = async (effect: string) => {
 }
 
 /**
- * Set nanoleaf panel currently selected effect
+ * Set Nanoleaf panel currently selected effect
  * @param {string} - effect
- * @returns {Promise<Response>} effect
+ * @returns {Promise<Response>} request response
  */
 // Not exactly sure how to use this function
 export const writeEffect = async (command: string, effect: string) => {
@@ -311,7 +311,7 @@ export const writeEffect = async (command: string, effect: string) => {
 }
 
 /**
- * Get nanoleaf panel effect list
+ * Get Nanoleaf panel effect list
  * @returns {Promise<string[]>} effect
  */
 export const getEffectList = async () => {
@@ -321,7 +321,7 @@ export const getEffectList = async () => {
 }
 
 /**
- * Get nanoleaf panel orientation
+ * Get Nanoleaf panel orientation
  * @returns {Promise<number>} orientation
  */
 export const getGlobalOrientation = async () => {
@@ -333,7 +333,7 @@ export const getGlobalOrientation = async () => {
 }
 
 /**
- * Set nanoleaf panel orientation
+ * Set Nanoleaf panel orientation
  * @param {number} - orientation between 0-360
  * @returns {Promise<number>} orientation
  */
@@ -347,7 +347,7 @@ export const setGlobalOrientation = async (orientation: number) => {
 }
 
 /**
- * Get nanoleaf panel layout
+ * Get Nanoleaf panel layout
  * @returns {Promise<AllPanelInfo['panelLayout']['layout']>} layout
  */
 export const getLayout = async () => {
@@ -357,12 +357,28 @@ export const getLayout = async () => {
 }
 
 /**
- * Identify nanoleaf panel
- * @returns {Promise<Response>} layout
+ * Identify Nanoleaf panel
+ * @returns {Promise<Response>}
  */
 export const identify = async () => {
 	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/identify`, {
 		method: 'PUT',
+	})
+	return response
+}
+
+/**
+ * Enable external control (streaming) to Nanoleaf panel
+ * @returns {Promise<Response>} request response
+ */
+export const enableStreaming = async () => {
+	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+		method: 'PUT',
+		body: JSON.stringify({
+			command: 'display',
+			animType: 'extControl',
+			extControlVersion: 'v2',
+		}),
 	})
 	return response
 }
