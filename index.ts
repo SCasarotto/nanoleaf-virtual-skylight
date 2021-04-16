@@ -1,7 +1,9 @@
 import { sleep } from 'https://deno.land/x/sleep/mod.ts'
 import { Image } from 'https://deno.land/x/imagescript/mod.ts'
 
-import { getBloomSkyDdata, apiRequest, setCustomEffect } from './api.ts'
+import { setCustomEffect } from './api/nanoleaf.ts'
+import { getBloomSkyDdata } from './api/bloomsky.ts'
+import { apiRequest } from './utils.ts'
 
 const panelIdArray = [
 	30919, // Control Panel ID
