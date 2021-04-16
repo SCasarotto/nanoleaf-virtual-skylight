@@ -1,39 +1,21 @@
-import { settings } from './settings.ts'
+import { settings } from './../settings.ts'
+import { apiRequest } from './../utils.ts'
 
-const { API_DEBUGGING, NANOLEAF_AUTH_TOKEN, NANOLEAF_IP_ADDRESS, NANOLEAF_PORT } = settings
+const { NANOLEAF_AUTH_TOKEN, NANOLEAF_IP_ADDRESS, NANOLEAF_PORT } = settings
 
-const BASE_URL = `http://${NANOLEAF_IP_ADDRESS}:${NANOLEAF_PORT}/api/v1`
-
-/**
- * Api Request helper.
- * Simple wrapper around fetch to do easy logging
- * @param {Request | URL | string} - input
- * @param {RequestInit} - [init]
- * @returns {Promise<Response>}
- */
-export const apiRequest = async (input: Request | URL | string, init?: RequestInit) => {
-	if (API_DEBUGGING) {
-		console.log('API REQUEST:', { input, init })
-	}
-	const response = await fetch(input, init)
-	if (API_DEBUGGING) {
-		const responseClone = response.clone()
-		try {
-			const data = await responseClone.json()
-			console.log('API RESPONSE', { response: responseClone, data })
-		} catch (e) {
-			console.log('API RESPONSE', { response: responseClone })
-		}
-	}
-	return response
-}
+//
+// Nanoleaf APIs
+//
+// API Ref: https://forum.nanoleaf.me/docs#_oon416cadkkr
+//
+const NANOLEAF_BASE_URL = `http://${NANOLEAF_IP_ADDRESS}:${NANOLEAF_PORT}/api/v1`
 
 /**
  * Requests a new auth token from Nanoleaf panel
  * @returns {Promise<string>} auth token
  */
 export const getAuthToken = async () => {
-	const response = await apiRequest(`${BASE_URL}/new`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/new`, {
 		method: 'POST',
 	})
 	const data: { auth_token: string } = await response.json()
@@ -46,7 +28,7 @@ export const getAuthToken = async () => {
  * @returns {Promise<Response>} request response
  */
 export const deleteAuthToken = async (authToken: string) => {
-	const response = await apiRequest(`${BASE_URL}/${authToken}`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${authToken}`, {
 		method: 'DELETE',
 	})
 	const data: { auth_token: string } = await response.json()
@@ -102,7 +84,7 @@ export interface AllPanelInfo {
  * @returns {Promise<AllPanelInfo>} panel data
  */
 export const getAllPanelInfo = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/`)
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/`)
 	const data: AllPanelInfo = await response.json()
 	return data
 }
@@ -112,7 +94,7 @@ export const getAllPanelInfo = async () => {
  * @returns {Promise<boolean>} state of Nanoleaf panel on or off
  */
 export const isOn = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`)
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`)
 	const data: AllPanelInfo['state']['on'] = await response.json()
 	return data.value
 }
@@ -122,7 +104,7 @@ export const isOn = async () => {
  * @returns {Promise<Response>} request response
  */
 export const turnOn = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`, {
 		method: 'PUT',
 		body: JSON.stringify({ on: { value: true } }),
 	})
@@ -134,7 +116,7 @@ export const turnOn = async () => {
  * @returns {Promise<Response>} request response
  */
 export const turnOff = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/on`, {
 		method: 'PUT',
 		body: JSON.stringify({ on: { value: false } }),
 	})
@@ -146,7 +128,9 @@ export const turnOff = async () => {
  * @returns {Promise<number>} brightness value between 0-100
  */
 export const getBrightness = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/brightness`)
+	const response = await apiRequest(
+		`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/brightness`,
+	)
 	const data: AllPanelInfo['state']['brightness'] = await response.json()
 	return data.value
 }
@@ -166,7 +150,7 @@ export type SetBrightnessData = SetBrightnessSpecifc | SetBrightnessIncrement
  * @returns {Promise<Response>} request response
  */
 export const setBrightness = async (data: SetBrightnessData) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
 		method: 'PUT',
 		body: JSON.stringify({ brightness: data }),
 	})
@@ -178,7 +162,7 @@ export const setBrightness = async (data: SetBrightnessData) => {
  * @returns {Promise<number>} hue value between 0-360
  */
 export const getHue = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/hue`)
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/hue`)
 	const data: AllPanelInfo['state']['hue'] = await response.json()
 	return data.value
 }
@@ -196,7 +180,7 @@ export type SetHueData = SetHueSpecifc | SetHueIncrement
  * @returns {Promise<Response>} request response
  */
 export const setHue = async (data: SetHueData) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
 		method: 'PUT',
 		body: JSON.stringify({ hue: data }),
 	})
@@ -208,7 +192,7 @@ export const setHue = async (data: SetHueData) => {
  * @returns {Promise<number>} saturation value between 0-100
  */
 export const getSturation = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/sat`)
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/sat`)
 	const data: AllPanelInfo['state']['sat'] = await response.json()
 	return data.value
 }
@@ -226,7 +210,7 @@ export type SetSaturationData = SetSaturationSpecifc | SetSaturationIncrement
  * @returns {Promise<Response>} request response
  */
 export const setSaturation = async (data: SetSaturationData) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
 		method: 'PUT',
 		body: JSON.stringify({ sat: data }),
 	})
@@ -238,7 +222,7 @@ export const setSaturation = async (data: SetSaturationData) => {
  * @returns {Promise<number>} color temperature value between 1200-6500
  */
 export const getColorTemperature = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/ct`)
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/ct`)
 	const data: AllPanelInfo['state']['ct'] = await response.json()
 	return data.value
 }
@@ -256,7 +240,7 @@ export type SetColorTemperatureData = SetColorTemperatureSpecifc | SetColorTempe
  * @returns {Promise<Response>} request response
  */
 export const setColorTemperature = async (data: SetColorTemperatureData) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state`, {
 		method: 'PUT',
 		body: JSON.stringify({ ct: data }),
 	})
@@ -268,18 +252,18 @@ export const setColorTemperature = async (data: SetColorTemperatureData) => {
  * @returns {Promise<number>} color mode
  */
 export const getColorMode = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/colorMode`)
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/state/colorMode`)
 	const data: AllPanelInfo['state']['colorMode'] = await response.json()
 	return data
 }
 
 /**
- * Get Nanoleaf panel color mode
- * @returns {Promise<number>} color mode
+ * Get Nanoleaf panel effect select
+ * @returns {Promise<string>} selected effect
  */
 export const getEffectSelect = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects/select`)
-	const data: AllPanelInfo['state']['colorMode'] = await response.json()
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects/select`)
+	const data: AllPanelInfo['effects']['select'] = await response.json()
 	return data
 }
 
@@ -289,7 +273,7 @@ export const getEffectSelect = async () => {
  * @returns {Promise<Response>} request response
  */
 export const setSelectedEffect = async (effect: string) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
 		method: 'PUT',
 		body: JSON.stringify({ select: effect }),
 	})
@@ -297,13 +281,27 @@ export const setSelectedEffect = async (effect: string) => {
 }
 
 /**
- * Set Nanoleaf panel currently selected effect
+ * Set Custom Nanoleaf panel effect
+ * @param {string} - effect
+ * @returns {Promise<Response>} request response
+ */
+// TODO: Improve This Type
+export const setCustomEffect = async (data: any) => {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+		method: 'PUT',
+		body: JSON.stringify({ write: data }),
+	})
+	return response
+}
+
+/**
+ * Add Nanoleaf panel effect
  * @param {string} - effect
  * @returns {Promise<Response>} request response
  */
 // Not exactly sure how to use this function
 export const writeEffect = async (command: string, effect: string) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
 		method: 'PUT',
 		body: JSON.stringify({ write: { command, animName: effect } }),
 	})
@@ -315,7 +313,9 @@ export const writeEffect = async (command: string, effect: string) => {
  * @returns {Promise<string[]>} effect
  */
 export const getEffectList = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects/effectsList`)
+	const response = await apiRequest(
+		`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects/effectsList`,
+	)
 	const data: string[] = await response.json()
 	return data
 }
@@ -326,7 +326,7 @@ export const getEffectList = async () => {
  */
 export const getGlobalOrientation = async () => {
 	const response = await apiRequest(
-		`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout/globalOrientation`,
+		`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout/globalOrientation`,
 	)
 	const data: AllPanelInfo['panelLayout']['globalOrientation'] = await response.json()
 	return data.value
@@ -338,7 +338,7 @@ export const getGlobalOrientation = async () => {
  * @returns {Promise<number>} orientation
  */
 export const setGlobalOrientation = async (orientation: number) => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout`, {
 		method: 'PUT',
 		body: JSON.stringify({ globalOrientation: { value: orientation } }),
 	})
@@ -351,7 +351,9 @@ export const setGlobalOrientation = async (orientation: number) => {
  * @returns {Promise<AllPanelInfo['panelLayout']['layout']>} layout
  */
 export const getLayout = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout/layout`)
+	const response = await apiRequest(
+		`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/panelLayout/layout`,
+	)
 	const data: AllPanelInfo['panelLayout']['layout'] = await response.json()
 	return data
 }
@@ -361,7 +363,7 @@ export const getLayout = async () => {
  * @returns {Promise<Response>}
  */
 export const identify = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/identify`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/identify`, {
 		method: 'PUT',
 	})
 	return response
@@ -372,7 +374,7 @@ export const identify = async () => {
  * @returns {Promise<Response>} request response
  */
 export const enableStreaming = async () => {
-	const response = await apiRequest(`${BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
+	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
 		method: 'PUT',
 		body: JSON.stringify({
 			command: 'display',
