@@ -1,8 +1,8 @@
 import { sleep } from 'https://deno.land/x/sleep/mod.ts'
 import { Image } from 'https://deno.land/x/imagescript/mod.ts'
 
-import { setCustomEffect } from './api/nanoleaf.ts'
-import { getBloomSkyDdata } from './api/bloomsky.ts'
+import { setCustomEffect, setSelectedEffect } from './api/nanoleaf.ts'
+import { getBloomSkyData } from './api/bloomsky.ts'
 import { apiRequest } from './utils.ts'
 
 const panelIdArray = [
@@ -82,40 +82,56 @@ interface PanelConfig {
 const panelConfigToString = (d: PanelConfig) =>
 	`${d.id} ${d.numberOfFrames ?? 1} ${d.red} ${d.green} ${d.blue} ${d.white ?? 0} ${d.time ?? 10}`
 
+let previousImageUrl = ''
+let duplicateCount = 0
+
 while (true) {
-	const weatherData = await getBloomSkyDdata()
-	if (weatherData?.[0]) {
-		const { ImageURL } = weatherData[0].Data
-		console.log(ImageURL)
-		const response = await apiRequest(ImageURL)
-		const arrayBuffer = await response.arrayBuffer()
-		const image = await Image.decode(new Uint8Array(arrayBuffer))
-		const resizedImage = image.resize(6, 6)
-		await setCustomEffect({
-			command: 'add',
-			animType: 'static',
-			animData: `${panelIdArray.length} ${panelIdArray
-				.map((d) => {
-					const pixelCoord = panelIdToPixelCoord(d)
-					if (pixelCoord) {
-						const [red, green, blue] = resizedImage.getRGBAAt(
-							pixelCoord.x,
-							pixelCoord.y,
-						)
-						return panelConfigToString({
-							id: d,
-							red,
-							green,
-							blue,
+	try {
+		const weatherData = await getBloomSkyData()
+		if (weatherData?.[0]) {
+			const { ImageURL } = weatherData[0].Data
+			console.log(ImageURL)
+			if (ImageURL !== previousImageUrl) {
+				duplicateCount = 0
+				const response = await apiRequest(ImageURL)
+				const arrayBuffer = await response.arrayBuffer()
+				const image = await Image.decode(new Uint8Array(arrayBuffer))
+				const resizedImage = image.resize(6, 6)
+				await setCustomEffect({
+					command: 'add',
+					animType: 'static',
+					animData: `${panelIdArray.length} ${panelIdArray
+						.map((d) => {
+							const pixelCoord = panelIdToPixelCoord(d)
+							if (pixelCoord) {
+								const [red, green, blue] = resizedImage.getRGBAAt(
+									pixelCoord.x,
+									pixelCoord.y,
+								)
+								return panelConfigToString({
+									id: d,
+									red,
+									green,
+									blue,
+								})
+							}
+							return ''
 						})
-					}
-					return ''
+						.join(' ')} `,
+					loop: false,
+					palette: [],
+					colorType: 'HSB',
 				})
-				.join(' ')} `,
-			loop: false,
-			palette: [],
-			colorType: 'HSB',
-		})
+			} else {
+				duplicateCount += 1
+				if (duplicateCount > 1) {
+					setSelectedEffect('Clear Night Sky')
+				}
+			}
+			previousImageUrl = ImageURL
+		}
+	} catch (e) {
+		console.log(e)
 	}
 	await sleep(5 * 60)
 }

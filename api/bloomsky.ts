@@ -62,11 +62,15 @@ export type BloomSkyResponseData = BloomSkyResponseDatum[]
  * Get bloomsky base data
  * @returns {Promise<BloomSkyResponseData>} request response
  */
-export const getBloomSkyDdata = async () => {
+export const getBloomSkyData = async () => {
 	const response = await apiRequest(`${BLOOM_SKY_BASE_URL}`, {
 		method: 'GET',
 		headers: { Authorization: BLOOMSKY_API_KEY },
 	})
+	if (!response.ok) {
+		console.log(response)
+		throw new Error('Error occured loading bloomsky data')
+	}
 	const data: BloomSkyResponseData = await response.json()
 	return data
 }
