@@ -20,6 +20,7 @@ export const apiRequest = async (input: Request | URL | string, init?: RequestIn
 			const data = await responseClone.json()
 			console.log('API RESPONSE', { response: responseClone, data })
 		} catch (e) {
+			console.error(e)
 			console.log('API RESPONSE', { response: responseClone })
 		}
 	}

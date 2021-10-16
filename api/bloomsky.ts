@@ -30,8 +30,10 @@ interface BloomSkyResponseDatum {
 	DST: 0 | 1
 	BoundedPoint: string
 	LON: number
-	Point: {} // not sure
+	// deno-lint-ignore ban-types
+	Point: {} // not sure ofthe type - Originally {}
 	VideoList: string[]
+	// deno-lint-ignore camelcase
 	VideoList_C: string[]
 	DeviceID: string
 	NumOfFollowers: number

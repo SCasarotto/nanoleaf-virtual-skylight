@@ -295,7 +295,7 @@ export const getMoonTimes = (date: Date, lat: number, lng: number, inUTC?: boole
 		h0 = h2
 	}
 
-	var result: Record<string, Date | boolean> = {}
+	const result: Record<string, Date | boolean> = {}
 
 	if (rise) {
 		result.rise = hoursLater(t, rise)

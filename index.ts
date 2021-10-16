@@ -100,7 +100,7 @@ while (true) {
 		if (dataResponse) {
 			foundNanoleaf = true
 		}
-	} catch (e) {
+	} catch (_) {
 		console.log('Did not find Nanoleaf')
 	}
 	if (foundNanoleaf) {

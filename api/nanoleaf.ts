@@ -286,6 +286,7 @@ export const setSelectedEffect = async (effect: string) => {
  * @returns {Promise<Response>} request response
  */
 // TODO: Improve This Type
+// deno-lint-ignore no-explicit-any
 export const setCustomEffect = async (data: any) => {
 	const response = await apiRequest(`${NANOLEAF_BASE_URL}/${NANOLEAF_AUTH_TOKEN}/effects`, {
 		method: 'PUT',
