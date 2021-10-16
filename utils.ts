@@ -25,3 +25,36 @@ export const apiRequest = async (input: Request | URL | string, init?: RequestIn
 	}
 	return response
 }
+
+type CreateLinearScaleData = {
+	minScale: number
+	maxScale: number
+	minValue: number
+	maxValue: number
+}
+/**
+ * Create Linear Scale
+ * Create a linear scale mapping one dimensions to another
+ * @param {CreateLinearScaleData} data
+ * @returns {(value: number) => number} scale
+ */
+export const createLinearScale = (data: CreateLinearScaleData) => {
+	const { maxScale, maxValue, minScale, minValue } = data
+	const ratio = (maxScale - minScale) / (maxValue - minValue)
+	return (value: number) => minScale + ratio * (value - minValue)
+}
+
+type CreateAndUseLinearScaleData = CreateLinearScaleData & {
+	value: number
+}
+/**
+ * Create And Use Linear Scale
+ * Create a linear scale mapping one dimensions to another and then use it with hte value
+ * @param {CreateAndUseLinearScaleData} data
+ * @returns {number} value - mapped to the scale
+ */
+export const createAndUseLinearScale = (data: CreateAndUseLinearScaleData) => {
+	const { value, ...rest } = data
+	const scale = createLinearScale(rest)
+	return scale(value)
+}
