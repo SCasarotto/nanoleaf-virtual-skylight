@@ -149,11 +149,11 @@ while (true) {
 				previousImageUrl = ImageURL
 
 				// Set Brightness
-				// < dawn or > dusk => 20
-				// dawn -> sunriseEnd => 20 - 0.75
-				// sunriseEnd -> sunriseEnd + 2 hour => 0.75 - 1
-				// sunsetStart - 2 hour -> sunset => 1 - 0.75
-				// sunset -> dusk => 0.75 - 0.2
+				// < dawn or > dusk => 15
+				// dawn -> sunriseEnd => 15 - 75
+				// sunriseEnd -> sunriseEnd + 2 hour => 75 - 100
+				// sunsetStart - 2 hour -> sunset => 100- 75
+				// sunset -> dusk => 75 - 15
 				const { dawn, dusk, sunriseEnd, sunsetStart } = getTimes(
 					new Date(),
 					41.883641868649995,
@@ -165,16 +165,17 @@ while (true) {
 				const sunsetStartEpoch = sunsetStart.getTime()
 				const duskEpoch = dusk.getTime()
 				const HOUR_IN_MILISECONDS = 60 * 60 * 1000
+				const minBrightness = 15
 
-				let newBrightness = 20
+				let newBrightness = minBrightness
 				// Before Dawn
 				if (now < dawnEpoch) {
-					newBrightness = 20
+					newBrightness = minBrightness
 					console.log('Between Dawn', newBrightness)
 				} else if (now < sunriseEndEpoch) {
 					newBrightness = Math.round(
 						createAndUseLinearScale({
-							minScale: 20,
+							minScale: minBrightness,
 							maxScale: 75,
 							minValue: dawnEpoch,
 							maxValue: sunriseEndEpoch,
@@ -211,7 +212,7 @@ while (true) {
 					newBrightness = Math.round(
 						createAndUseLinearScale({
 							minScale: 75,
-							maxScale: 20,
+							maxScale: minBrightness,
 							minValue: sunsetStartEpoch,
 							maxValue: duskEpoch,
 							value: now,
@@ -220,7 +221,7 @@ while (true) {
 					console.log('Sunset Start and Dusk', newBrightness)
 				} else if (now >= duskEpoch) {
 					// After Dusk
-					newBrightness = 20
+					newBrightness = minBrightness
 					console.log('After Dusk', newBrightness)
 				}
 				await setBrightness({ value: newBrightness })
