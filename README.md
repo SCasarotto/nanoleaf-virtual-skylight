@@ -1,6 +1,6 @@
 # nanoleaf-virtual-skylight
 
-The goal is this project is to use Nanoleaf Canvas tiles and create a virtual skylight based on the current weather.
+The goal of this project is to use Nanoleaf Canvas tiles and create a virtual skylight based on the current weather.
 
 This project is built with [deno](https://deno.land/) because ... all the cool kids are doing it.
 
